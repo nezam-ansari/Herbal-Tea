@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Button } from '@material-ui/core';
+import { connect } from 'react-redux';
+import { LoginPopup } from '../actions/global';
 
 const Container = styled.div`
 width: 100%;
@@ -31,11 +34,14 @@ justify-content: center;
 align-items: center;
 width: 25%;
 border-right: 2px solid white;
-
 `;
 
-const Header = () => {
-    return(
+
+const Header = (props) => {
+    const handleOpen = () => {
+        props.loginPopupOpen(true)
+    }
+    return (
         <Container>
             <BlogPart>
                 <Title>Teas</Title>
@@ -48,12 +54,16 @@ const Header = () => {
                 <Title>NEZAM TEA</Title>
             </MiddlePart>
             <BlogPart>
-                <Title>
-                    Hello
-                </Title>
+                <Button variant="contained" onClick={handleOpen}>Login</Button>
             </BlogPart>
         </Container>
     )
 }
 
-export default Header;
+
+
+const mapDispatchToProps = (dispatch) => ({
+    loginPopupOpen: (data) => dispatch(LoginPopup(data))
+})
+
+export default connect(null, mapDispatchToProps)(Header);
