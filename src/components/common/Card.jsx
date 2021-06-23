@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Almond_spice from "../assets/Almond_spice.png";
 import chamomile_tea from "../assets/chamomile_tea.png";
@@ -15,17 +15,19 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import CardPopUp from "./CardPopup";
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  padding: 20px;
 `;
 
 
 const ImageContainer = styled.div`
-  height: 250px;
-  width: 250px;
+  height: 300px;
+  width: 300px;
   background-image: url(${(props) => props.image});
   background-size: cover;
   &:hover {
@@ -38,7 +40,7 @@ const ImageContainer = styled.div`
 `;
 
 const View = styled.div`
-  width: 250px;
+  width: 300px;
   height: 50px;
   background-color: darkgray;
   opacity: 0.6;
@@ -49,7 +51,7 @@ const Text = styled.h2`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 250px;
+  width: 300px;
   margin: 0;
   font-size: 16px;
   font-family: cursive;
@@ -61,7 +63,7 @@ justify-content: center;
 align-items: center;
 flex-direction: column;
 margin: 0;
-width: 250px;
+width: 300px;
 }
 `;
 
@@ -80,6 +82,7 @@ const Price = styled.h2`
 const CardConatiner = styled.div`
   padding: 10px;
   cursor: pointer;
+  outline: none;
 `;
 
 const imageArray = [
@@ -119,7 +122,7 @@ const nextButton = {
   fontSize: "35px",
   display: "flex",
   position: "absolute",
-  top: "120px",
+  top: "150px",
   zIndex: 1,
   right: 35,
   background: "white",
@@ -131,7 +134,7 @@ const previouButton = {
   fontSize: "35px",
   display: "flex",
   position: "absolute",
-  top: "130px",
+  top: "150px",
   zIndex: 1,
   left: 15,
   background: "white",
@@ -153,7 +156,7 @@ const settings = {
   dots: false,
   infinite: false,
   speed: 500,
-  slidesToShow: 4,
+  slidesToShow: 4.2,
   slidesToScroll: 4,
   initialSlide: 0,
   nextArrow: <SampleNextArrow />,
@@ -188,6 +191,19 @@ const settings = {
 
 const Card = () => {
   const [onHover, setHover] = React.useState(null);
+  const [open, setopen] = React.useState(false);
+  const inputRef = React.createRef();
+
+  useEffect(() => {
+    document.addEventListener("mousedown", () => openPopup(false), false);
+    return () => {
+      document.removeEventListener("mousedown", () => openPopup(false), false);
+    }
+  }, [])
+
+  const openPopup = (e) => {
+    setopen(e)
+  }
 
   return (
     <Container>
@@ -200,6 +216,7 @@ const Card = () => {
                 onMouseEnter={() => setHover(index)}
                 onMouseLeave={() => setHover(null)}
                 image={index == onHover ? val.subImage : val.mainImage}
+                onClick={() => openPopup(true)}
               >
                 {index == onHover && (
                   <View>
@@ -215,6 +232,7 @@ const Card = () => {
           );
         })}
       </Slider>
+      {!!open && <CardPopUp openPopup={openPopup} />}
     </Container>
   );
 };
